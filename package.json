@@ -1,0 +1,19 @@
+{
+  "name": "screenshot_pipeline",
+  "version": "1.0.0",
+  "description": "A Puppeteer project for taking screenshots and testing page content.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^5.1.2",
+    "express": "^4.21.2",
+    "fs": "^0.0.1-security",
+    "puppeteer": "^24.1.1",
+    "screenshot_pipeline": "file:"
+  }
+}
