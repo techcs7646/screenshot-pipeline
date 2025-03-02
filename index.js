@@ -1,10 +1,11 @@
+import 'dotenv/config'; // Load environment variables
 import express from 'express';
 import puppeteer from 'puppeteer';
 import fs from 'fs';
 import path from 'path';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use Render's PORT environment variable
 
 // Middleware to parse JSON
 app.use(express.json());
@@ -26,8 +27,12 @@ app.post('/screenshot', async (req, res) => {
     }
 
     try {
-        // Launch Puppeteer
-        const browser = await puppeteer.launch({ headless: true });
+        // Launch Puppeteer with Render-compatible options
+        const browser = await puppeteer.launch({
+            headless: 'new', // Ensures Puppeteer runs correctly on Render
+            args: ['--no-sandbox', '--disable-setuid-sandbox'], // Required for Render
+        });
+
         const page = await browser.newPage();
         await page.setViewport({ width: 1280, height: 800 });
 
@@ -45,7 +50,7 @@ app.post('/screenshot', async (req, res) => {
         await browser.close();
 
         // Send URL of the saved screenshot
-        res.json({ imageUrl: `./screenshots/screenshot-${timestamp}.png` });
+        res.json({ imageUrl: `/screenshots/screenshot-${timestamp}.png` });
     } catch (error) {
         console.error('Error occurred:', error);
         res.status(500).json({ error: 'An error occurred while taking the screenshot' });
@@ -62,5 +67,5 @@ app.use((req, res) => {
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
